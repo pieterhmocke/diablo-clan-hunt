@@ -6,16 +6,18 @@
   <title>Elysian's Decree | The Final Seal</title>
   <style>
     :root {
-      --bg: #0e0b09;
-      --panel: rgba(20, 14, 10, 0.92);
-      --border: #5b4331;
-      --gold: #c8a56a;
-      --red: #8f1f1f;
-      --red-bright: #b32b2b;
-      --text: #e7dcc8;
-      --muted: #b7a78d;
-      --success: #d8b36a;
+      --text: #ead9bb;
+      --gold: #c79a52;
+      --gold-soft: #d6b37a;
+      --muted: #c9ae7e;
+      --border: #5a3423;
+      --panel: rgba(12, 7, 6, 0.84);
+      --panel-soft: rgba(0, 0, 0, 0.22);
+      --red: #9f2a23;
+      --red-bright: #bd3a2f;
       --shadow: rgba(0, 0, 0, 0.55);
+      --success: #d8a85b;
+      --fail: #c96a62;
     }
 
     * {
@@ -28,26 +30,47 @@
       font-family: Georgia, "Times New Roman", serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top, rgba(120, 40, 20, 0.18), transparent 35%),
-        linear-gradient(180deg, #19110d 0%, #0d0907 100%);
+        linear-gradient(rgba(8, 5, 4, 0.58), rgba(8, 5, 4, 0.84)),
+        url("Clan Event.png") center center / cover no-repeat fixed;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      justify-content: flex-end;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(255, 120, 40, 0.08), transparent 18%),
+        radial-gradient(circle at 80% 20%, rgba(255, 80, 20, 0.06), transparent 20%),
+        radial-gradient(circle at 60% 60%, rgba(255, 140, 60, 0.05), transparent 22%);
+      animation: emberDrift 18s ease-in-out infinite alternate;
+      z-index: 0;
     }
 
     .container {
       width: 100%;
-      max-width: 760px;
+      display: flex;
+      justify-content: flex-end;
+      position: relative;
+      z-index: 1;
     }
 
     .panel {
+      width: 100%;
+      max-width: 520px;
       background: var(--panel);
       border: 1px solid var(--border);
       box-shadow: 0 20px 60px var(--shadow);
-      padding: 32px 28px;
+      padding: 34px 28px;
       border-radius: 10px;
       text-align: center;
+      backdrop-filter: blur(3px);
     }
 
     .crest {
@@ -58,9 +81,20 @@
       margin-bottom: 12px;
     }
 
+    .seal {
+      font-size: 54px;
+      margin: 6px 0 14px;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+      transition: transform 0.35s ease;
+    }
+
+    .seal.open {
+      transform: scale(1.08);
+    }
+
     h1 {
       margin: 0 0 10px;
-      font-size: 42px;
+      font-size: 44px;
       font-weight: 600;
       color: var(--gold);
       line-height: 1.1;
@@ -68,21 +102,10 @@
 
     .subtitle {
       margin: 0 auto 28px;
-      max-width: 580px;
-      color: var(--muted);
+      max-width: 430px;
+      color: var(--gold-soft);
       font-size: 18px;
       line-height: 1.6;
-    }
-
-    .seal {
-      font-size: 58px;
-      margin: 6px 0 18px;
-      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
-      transition: transform 0.35s ease;
-    }
-
-    .seal.open {
-      transform: scale(1.08);
     }
 
     .field-wrap {
@@ -95,18 +118,23 @@
       display: block;
       margin-bottom: 10px;
       font-size: 16px;
-      color: var(--muted);
+      color: var(--gold-soft);
     }
 
     input[type="text"] {
       width: 100%;
       padding: 16px 18px;
       border-radius: 8px;
-      border: 1px solid #6f5640;
-      background: #120d0a;
-      color: var(--text);
+      border: 1px solid #6e432c;
+      background: rgba(10, 6, 5, 0.92);
+      color: #f1e0bf;
       outline: none;
       box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.35);
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(199, 154, 82, 0.15);
     }
 
     #seekerName {
@@ -116,14 +144,9 @@
     }
 
     #sealCode {
-      font-size: 26px;
+      font-size: 28px;
       text-align: center;
       letter-spacing: 8px;
-    }
-
-    input[type="text"]:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200, 165, 106, 0.15);
     }
 
     .button-row {
@@ -134,7 +157,7 @@
       appearance: none;
       border: none;
       background: linear-gradient(180deg, var(--red-bright), var(--red));
-      color: #f8eee1;
+      color: #fff1dd;
       padding: 14px 28px;
       font-size: 17px;
       border-radius: 8px;
@@ -146,18 +169,18 @@
     }
 
     button:hover {
-      filter: brightness(1.06);
+      filter: brightness(1.08);
     }
 
     .message {
       margin-top: 24px;
       min-height: 120px;
       padding: 18px;
-      border: 1px solid rgba(200, 165, 106, 0.18);
-      background: rgba(0, 0, 0, 0.16);
+      border: 1px solid rgba(199, 154, 82, 0.22);
+      background: var(--panel-soft);
       border-radius: 8px;
       line-height: 1.7;
-      color: var(--muted);
+      color: var(--gold-soft);
     }
 
     .success-title {
@@ -169,10 +192,10 @@
     .claim-box {
       margin-top: 14px;
       padding: 14px;
-      border: 1px solid #7a5a2a;
-      background: rgba(199, 156, 82, 0.08);
+      border: 1px solid #7a5128;
+      background: rgba(199, 154, 82, 0.08);
       border-radius: 8px;
-      color: #f1ddb0;
+      color: #f2ddb2;
       font-size: 22px;
       letter-spacing: 2px;
     }
@@ -180,13 +203,42 @@
     .small-note {
       margin-top: 16px;
       font-size: 13px;
-      color: #9d8c73;
+      color: #b79866;
     }
 
     .footer {
       margin-top: 18px;
       font-size: 13px;
-      color: #8f7e66;
+      color: #a98d60;
+    }
+
+    @keyframes emberDrift {
+      0% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 0.75;
+      }
+      50% {
+        transform: translateY(-10px) translateX(8px) scale(1.03);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(10px) translateX(-8px) scale(0.98);
+        opacity: 0.8;
+      }
+    }
+
+    @media (max-width: 900px) {
+      body {
+        justify-content: center;
+        padding: 20px;
+        background:
+          linear-gradient(rgba(8, 5, 4, 0.68), rgba(8, 5, 4, 0.88)),
+          url("Clan Event.png") center center / cover no-repeat fixed;
+      }
+
+      .container {
+        justify-content: center;
+      }
     }
 
     @media (max-width: 640px) {
@@ -195,7 +247,7 @@
       }
 
       h1 {
-        font-size: 32px;
+        font-size: 34px;
       }
 
       .subtitle {
@@ -203,7 +255,7 @@
       }
 
       .seal {
-        font-size: 48px;
+        font-size: 46px;
       }
 
       #sealCode {
@@ -217,7 +269,7 @@
   <div class="container">
     <div class="panel">
       <div class="crest">Elysian's Decree</div>
-      <div id="seal" class="seal">🪙</div>
+      <div id="seal" class="seal">🔒</div>
       <h1>The Final Seal</h1>
       <p class="subtitle">
         Four signs were hidden across Sanctuary. Only those who gather them in the true order may break the final seal and claim the treasure within.
@@ -290,8 +342,9 @@
 
       if (!seekerRaw) {
         seal.classList.remove("open");
+        seal.textContent = "🔒";
         message.innerHTML = `
-          <div class="success-title" style="color:#b86a6a;">The seal knows you not.</div>
+          <div class="success-title" style="color:#c96a62;">The seal knows you not.</div>
           <div>Enter the name of the seeker before you attempt the final lock.</div>
         `;
         return;
@@ -299,8 +352,9 @@
 
       if (!phrases[seekerKey]) {
         seal.classList.remove("open");
+        seal.textContent = "🔒";
         message.innerHTML = `
-          <div class="success-title" style="color:#b86a6a;">Unknown seeker.</div>
+          <div class="success-title" style="color:#c96a62;">Unknown seeker.</div>
           <div>No claim phrase is bound to the name <strong>${seekerRaw}</strong>. Use a valid clan tag.</div>
         `;
         return;
@@ -311,7 +365,7 @@
         const claimPhrase = phrases[seekerKey];
 
         seal.classList.add("open");
-        seal.textContent = "🔓";
+        seal.textContent = "🗝️";
         message.innerHTML = `
           <div class="success-title">${displayName}, the Final Seal is broken.</div>
           <div>The last lock gives way, and the hidden prize is revealed.</div>
@@ -322,9 +376,9 @@
         const displayName = toTitleCase(seekerKey);
 
         seal.classList.remove("open");
-        seal.textContent = "🪙";
+        seal.textContent = "🔒";
         message.innerHTML = `
-          <div class="success-title" style="color:#b86a6a;">${displayName}, the seal rejects you.</div>
+          <div class="success-title" style="color:#c96a62;">${displayName}, the seal rejects you.</div>
           <div>The code is false. Gather the signs again and return when your path is true.</div>
         `;
       }
