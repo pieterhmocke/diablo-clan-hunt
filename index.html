@@ -266,6 +266,14 @@
   </style>
 </head>
 <body>
+  <audio id="clickSound" preload="auto">
+    <source src="seal-click.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="successSound" preload="auto">
+    <source src="seal-success.mp3" type="audio/mpeg">
+  </audio>
+
   <div class="container">
     <div class="panel">
       <div class="crest">Elysian's Decree</div>
@@ -330,12 +338,22 @@
     const button = document.getElementById("unlockBtn");
     const message = document.getElementById("message");
     const seal = document.getElementById("seal");
+    const clickSound = document.getElementById("clickSound");
+    const successSound = document.getElementById("successSound");
 
     function toTitleCase(name) {
       return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
     }
 
+    function playSound(audioEl) {
+      if (!audioEl) return;
+      audioEl.currentTime = 0;
+      audioEl.play().catch(() => {});
+    }
+
     function revealResult() {
+      playSound(clickSound);
+
       const seekerRaw = seekerInput.value.trim();
       const seekerKey = seekerRaw.toLowerCase();
       const enteredCode = codeInput.value.trim();
@@ -372,6 +390,10 @@
           <div class="claim-box">${claimPhrase}</div>
           <div class="small-note">Present this exact phrase to the host to claim your reward.</div>
         `;
+
+        setTimeout(() => {
+          playSound(successSound);
+        }, 120);
       } else {
         const displayName = toTitleCase(seekerKey);
 
