@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Elysian's Decree | The Fourth Seal</title>
+  <title>Elysian's Decree | The Final Seal</title>
   <style>
     :root {
       --bg: #0e0b09;
@@ -74,15 +74,21 @@
       line-height: 1.6;
     }
 
-    .chest {
-      font-size: 72px;
+    .seal {
+      font-size: 58px;
       margin: 6px 0 18px;
       filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
       transition: transform 0.35s ease;
     }
 
-    .chest.open {
+    .seal.open {
       transform: scale(1.08);
+    }
+
+    .field-wrap {
+      max-width: 360px;
+      margin: 0 auto 14px;
+      text-align: left;
     }
 
     .label {
@@ -90,25 +96,29 @@
       margin-bottom: 10px;
       font-size: 16px;
       color: var(--muted);
-      text-align: left;
-      max-width: 320px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     input[type="text"] {
       width: 100%;
-      max-width: 320px;
       padding: 16px 18px;
       border-radius: 8px;
       border: 1px solid #6f5640;
       background: #120d0a;
       color: var(--text);
+      outline: none;
+      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.35);
+    }
+
+    #seekerName {
+      font-size: 18px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    #sealCode {
       font-size: 26px;
       text-align: center;
       letter-spacing: 8px;
-      outline: none;
-      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.35);
     }
 
     input[type="text"]:focus {
@@ -141,7 +151,7 @@
 
     .message {
       margin-top: 24px;
-      min-height: 90px;
+      min-height: 120px;
       padding: 18px;
       border: 1px solid rgba(200, 165, 106, 0.18);
       background: rgba(0, 0, 0, 0.16);
@@ -192,11 +202,11 @@
         font-size: 16px;
       }
 
-      .chest {
-        font-size: 60px;
+      .seal {
+        font-size: 48px;
       }
 
-      input[type="text"] {
+      #sealCode {
         font-size: 22px;
         letter-spacing: 6px;
       }
@@ -207,62 +217,114 @@
   <div class="container">
     <div class="panel">
       <div class="crest">Elysian's Decree</div>
-      <div id="chest" class="chest">🧰</div>
-      <h1>The Fourth Seal</h1>
+      <div id="seal" class="seal">🪙</div>
+      <h1>The Final Seal</h1>
       <p class="subtitle">
         Four signs were hidden across Sanctuary. Only those who gather them in the true order may break the final seal and claim the treasure within.
       </p>
 
-      <label class="label" for="sealCode">Enter the 4-digit seal code</label>
-      <input
-        id="sealCode"
-        type="text"
-        maxlength="4"
-        inputmode="numeric"
-        autocomplete="off"
-        placeholder="----"
-      />
+      <div class="field-wrap">
+        <label class="label" for="seekerName">Name of the Seeker</label>
+        <input
+          id="seekerName"
+          type="text"
+          maxlength="30"
+          autocomplete="off"
+          placeholder="Enter your clan tag"
+        />
+      </div>
+
+      <div class="field-wrap">
+        <label class="label" for="sealCode">Enter the 4-digit seal code</label>
+        <input
+          id="sealCode"
+          type="text"
+          maxlength="4"
+          inputmode="numeric"
+          autocomplete="off"
+          placeholder="----"
+        />
+      </div>
 
       <div class="button-row">
         <button id="unlockBtn">Break the Seal</button>
       </div>
 
       <div id="message" class="message">
-        The chest is shut. The iron has not yet yielded.
+        The seal remains unbroken. Name yourself and bring forth the true code.
       </div>
 
       <div class="footer">
-        Present the claim phrase to the keeper of the prize.
+        Present your revealed claim phrase to the keeper of the prize.
       </div>
     </div>
   </div>
 
   <script>
     const correctCode = "3586";
-    const claimPhrase = "Fourth Seal";
 
-    const input = document.getElementById("sealCode");
+    const phrases = {
+      pandora: "Ashen Veil",
+      roasty: "Ember Crown",
+      nemesis: "Iron Judgment",
+      calider: "Thorn Sigil",
+      calypso: "Tidebloom",
+      banshee: "Grave Echo",
+      wolf: "Frostfang"
+    };
+
+    const seekerInput = document.getElementById("seekerName");
+    const codeInput = document.getElementById("sealCode");
     const button = document.getElementById("unlockBtn");
     const message = document.getElementById("message");
-    const chest = document.getElementById("chest");
+    const seal = document.getElementById("seal");
+
+    function toTitleCase(name) {
+      return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    }
 
     function revealResult() {
-      const entered = input.value.trim();
+      const seekerRaw = seekerInput.value.trim();
+      const seekerKey = seekerRaw.toLowerCase();
+      const enteredCode = codeInput.value.trim();
 
-      if (entered === correctCode) {
-        chest.classList.add("open");
-        chest.textContent = "🪙";
+      if (!seekerRaw) {
+        seal.classList.remove("open");
         message.innerHTML = `
-          <div class="success-title">The chest opens.</div>
-          <div>The final lock gives way, and the hidden prize is revealed.</div>
+          <div class="success-title" style="color:#b86a6a;">The seal knows you not.</div>
+          <div>Enter the name of the seeker before you attempt the final lock.</div>
+        `;
+        return;
+      }
+
+      if (!phrases[seekerKey]) {
+        seal.classList.remove("open");
+        message.innerHTML = `
+          <div class="success-title" style="color:#b86a6a;">Unknown seeker.</div>
+          <div>No claim phrase is bound to the name <strong>${seekerRaw}</strong>. Use a valid clan tag.</div>
+        `;
+        return;
+      }
+
+      if (enteredCode === correctCode) {
+        const displayName = toTitleCase(seekerKey);
+        const claimPhrase = phrases[seekerKey];
+
+        seal.classList.add("open");
+        seal.textContent = "🔓";
+        message.innerHTML = `
+          <div class="success-title">${displayName}, the Final Seal is broken.</div>
+          <div>The last lock gives way, and the hidden prize is revealed.</div>
           <div class="claim-box">${claimPhrase}</div>
-          <div class="small-note">Show this phrase to the host to claim your reward.</div>
+          <div class="small-note">Present this exact phrase to the host to claim your reward.</div>
         `;
       } else {
-        chest.classList.remove("open");
-        chest.textContent = "🧰";
+        const displayName = toTitleCase(seekerKey);
+
+        seal.classList.remove("open");
+        seal.textContent = "🪙";
         message.innerHTML = `
-          <div class="success-title" style="color:#b86a6a;">The seal rejects you.</div>
+          <div class="success-title" style="color:#b86a6a;">${displayName}, the seal rejects you.</div>
           <div>The code is false. Gather the signs again and return when your path is true.</div>
         `;
       }
@@ -270,13 +332,19 @@
 
     button.addEventListener("click", revealResult);
 
-    input.addEventListener("keypress", function (e) {
+    codeInput.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         revealResult();
       }
     });
 
-    input.addEventListener("input", function () {
+    seekerInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        revealResult();
+      }
+    });
+
+    codeInput.addEventListener("input", function () {
       this.value = this.value.replace(/[^0-9]/g, "");
     });
   </script>
